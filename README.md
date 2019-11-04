@@ -1,7 +1,7 @@
 # Moonshot
 **SwiftUI app: ScrollView, GeometryReader, Codable & Generics, NavigationLink**
 
-[Presentation](gif.gif)
+![](gif.gif)
 
 ## Day 41 - Challenges
 
