@@ -8,6 +8,13 @@
 
 import SwiftUI
 
+extension Comparable
+{
+    func clamp<T: Comparable>(lower: T, _ upper: T) -> T {
+        return min(max(self as! T, lower), upper)
+    }
+}
+
 struct MissionView: View {
     struct CrewMember {
         let role: String
@@ -22,11 +29,21 @@ struct MissionView: View {
             ScrollView(.vertical) {
                 VStack {
                     
-                    Image(self.mission.image)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: geometry.size.width * 0.7)
-                        .padding(.top)
+                    GeometryReader { proxy in
+                            Image(self.mission.image)
+                                .resizable()
+                                .scaledToFit()
+                                .scaleEffect( (proxy.frame(in: .global).minY / 88).clamp(lower: 0.8, 1) )
+                                .blur(radius: (proxy.frame(in: .global).minY - 104).clamp(lower: 0, 10) )
+                                .onTapGesture {
+                                    print("Global minY: \(proxy.frame(in: .global).minY)")
+                                }
+                                
+                    }
+                    .frame(maxWidth: geometry.size.width * 0.85, maxHeight: geometry.size.height * 0.85)
+                    .padding(.top)
+                    //.background(Color.blue)
+
                     
                     Text(self.mission.formattedLaunchDate).font(.caption)
                     
@@ -59,6 +76,7 @@ struct MissionView: View {
                     }
                 }
             }
+            
             
         }
         .navigationBarTitle(Text(mission.displayName), displayMode: .inline)
